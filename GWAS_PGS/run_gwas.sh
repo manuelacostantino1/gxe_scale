@@ -15,7 +15,6 @@ start_time=$(date+%s)
 echo "Date run: $now"
 
 lambda=0
-lambda_no_dots=0
 echo "Lambda: $lambda"
 
 pheno=$1
@@ -84,34 +83,12 @@ if (( $(echo "$lambda == 0" | bc -l) )); then
 
     pheno_file="$pheno_file_log"
     echo "Log-scaled phenotype file saved to: $pheno_file"
-elif (( $(echo "$lambda != 1" | bc -l) )); then
-    echo "Lambda is not equal to 1. Applying custom phenotype transformation: (pheno^lambda - 1) / lambda"
-    mkdir -p "$INTERMEDIATE_DIR"
-    pheno_file_custom="${INTERMEDIATE_DIR}/${pheno}_${lambda_no_dots}.pheno"
-
-    # Apply custom transformation
-    awk '
-    BEGIN { OFS="\t" }
-    NR == 1 { print $0 }  # Keep header row
-    NR > 1 {
-        if ($3 ~ /^[0-9.]+$/ && $3 > 0) {
-            $3 = (($3 ^ lambda) - 1) / lambda
-        } else {
-            $3 = "NA"  # Replace invalid entries
-        }
-        print $0
-    }' lambda="$lambda" "$pheno_file" > "$pheno_file_custom"
-
-    pheno_file="$pheno_file_custom"
-    echo "Custom transformed phenotype file saved to: $pheno_file"
 fi
 
 
 # Define GWAS output path based on lambda
 if (( $(echo "$lambda == 0" | bc -l) )); then
     gwas_path="${GWAS_LOG}${phenoLower}/"
-elif (( $(echo "$lambda != 1" | bc -l) )); then
-    gwas_path="${GWAS_LAMBDA}${phenoLower}/"
 else
     gwas_path="${GWAS}${phenoLower}/"
 fi
