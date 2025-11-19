@@ -17,8 +17,6 @@ lambda=1
 echo "Lambda: $lambda"
 
 pheno=$1
-GENOS="/scratch/reneefonseca/genotypes/"
-PHENOS="/gpfs/data/ukb-share/extracted_phenotypes/"
 GWAS="/gpfs/data/ukb-share/dahl/manuela/gwas_results/"
 GWAS_LOG="/gpfs/data/ukb-share/dahl/manuela/gwas_results_log/"
 LOCAL_PLINK2="/ess/home/home1/mcostantino/plink2"
