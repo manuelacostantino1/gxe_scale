@@ -31,7 +31,7 @@ ggplot(df, aes(x = pgs, y = LDL, color = statins)) +
                      labels = c("No Statins", "On Statins")) +
   labs(
     x = "Polygenic Score (LDL)",
-    y = "Measured LDL",
+    y = "Measured LDL (mmol/L)",
     color = "Statins",
   ) +
   theme_minimal(base_size = 14) +
