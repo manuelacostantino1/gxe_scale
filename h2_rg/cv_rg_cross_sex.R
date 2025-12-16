@@ -17,6 +17,8 @@ rgs_file <- rgs_file[!(rgs_file$phenotype=="Arm_fat-free_mass_left"),]
 rgs_file <- rgs_file[!(rgs_file$phenotype=="Arm_fat-free_mass_right"),]
 #rgs_file <- rgs_file[!(rgs_file$pheno=="Testosterone"),]
 rgs_file <- rgs_file[!(rgs_file$pheno=="WHRadjBMI_Emdin"),]
+rgs_file <- rgs_file[!(rgs_file$pheno=="Alcohol_intake_frequency"),]
+rgs_file <- rgs_file[!(rgs_file$pheno=="EA4"),]
 #rgs_file <- rgs_file[!(rgs_file$pheno=="C-reactive_protein"),]
 
 # Merge the dfs
@@ -34,11 +36,12 @@ merged_df <- merged_df %>%
   )
 
 merged_df <- na.omit(merged_df)
-hist(as.numeric(merged_df$rg_se_log))
-View(merged_df)
+#hist(as.numeric(merged_df$rg_se_log))
+#View(merged_df)
 merged_df$rg_default <- as.numeric(merged_df$rg_default)
 merged_df$rg_log <- as.numeric(merged_df$rg_log)
-merged_df$yaxis <- abs(merged_df$rg_default-merged_df$rg_log/merged_df$rg_default)
+merged_df$yaxis <- abs((merged_df$rg_default-merged_df$rg_log)/merged_df$rg_default)
+#merged_df$yaxis <- abs((merged_df$rg_default-merged_df$rg_log))
 merged_df$phenos <- gsub("_", " ", merged_df$phenos)
 merged_df$phenos <- capitalize_first(merged_df$phenos)
 merged_df <- merged_df %>%
@@ -47,7 +50,6 @@ merged_df <- merged_df %>%
     phenos == "Hdl" ~ "HDL",
     phenos == "Rbc" ~ "RBC",
     phenos == "Whradjbmi zhu" ~ "WHRadjBMI",
-    phenos == "Ea4" ~ "Education",
     phenos == "Hba1c" ~ "HbA1c",
     phenos == "Bmi" ~ "BMI",
     phenos == "Vitamin d" ~ "Vitamin D",
@@ -73,34 +75,23 @@ ggplot(merged_df, aes(x = abs(coef), y = yaxis, label = phenos, color=cv)) +
 
 
 
-png("/Users/manuelacostantino/Desktop/cv_plot.png",width = 10, height = 6, units = "in", res = 300)
-ggplot(merged_df, aes(x = as.numeric(cv), y = as.numeric(yaxis), label = phenos, color = abs(coef))) +
-  geom_point(size = 2, alpha = 0.8) +
-  geom_text_repel(size = 3, max.overlaps = 20) +
+png("/Users/manuelacostantino/Desktop/relative_cv_plot_outliers.png",width = 10, height = 6, units = "in", res = 300)
+ggplot(merged_df, aes(x = as.numeric(cv), y = as.numeric(yaxis), label = phenos)) +
+  geom_point(size = 2, alpha = 0.8, color = "skyblue3") +
+  #geom_text_repel(size = 4, max.overlaps = 10) +
   geom_smooth(method = "lm", se = FALSE, fullrange = TRUE, color = "black") +
   labs(
     x = "Coefficient of Variation",
     y = "Relative change in cross-sex rg (log vs. default)",
-    color = "|Main Effect of Sex|"
+    color = "Genetic correlation on the default scale"
   ) +
-  scale_color_gradient(
-    low = "gray25",
-    high = "#3366FF",
-    guide = guide_colorbar(
-      title.position = "right",   # moves title above bar
-      title.theme = element_text(angle = 270),
-      title.hjust = 0.5,       # centers title
-      barwidth = 1,
-      barheight = 24
-    )
-  ) +
-  theme_bw(base_size = 14) +
+  theme_bw(base_size = 15) +
   theme(
     panel.grid = element_blank(),
     legend.position = "right",
     legend.direction = "vertical",
-    legend.title = element_text(size = 12),
-    legend.text = element_text(size = 10)
+    legend.title = element_text(size = 13),
+    legend.text = element_text(size = 12)
   )
 dev.off()
 
