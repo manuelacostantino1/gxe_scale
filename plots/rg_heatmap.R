@@ -116,7 +116,7 @@ ggplot() +
   # Genetic correlations
   geom_tile(data = rg_long, aes(x = Trait2, y = Trait1, fill = rg)) +
   scale_fill_gradient2(
-    low = "blue", mid = "white", high = "darkslateblue",
+    low = "blue", mid = "white", high = "aquamarine4",
     midpoint = 0, limits = c(-0.05, 1.02),
     name = "Genetic correlation",
     guide = guide_colorbar(

@@ -19,7 +19,6 @@ echo "Lambda: $lambda"
 
 pheno=$1
 GENOS="/scratch/reneefonseca/genotypes/"
-PHENOS="/gpfs/data/ukb-share/extracted_phenotypes/"
 GWAS="/gpfs/data/ukb-share/dahl/manuela/gwas_results/"
 GWAS_LOG="/gpfs/data/ukb-share/dahl/manuela/gwas_results_log/"
 LOCAL_PLINK2="/ess/home/home1/mcostantino/plink2"
@@ -55,7 +54,7 @@ phenoNoDigits=${parse_pheno%% *}
 phenoLower=${parse_pheno##* }
 
 # Get phenotype file
-pheno_file="${PHENOS}${phenoNoDigits}/${pheno}.pheno"
+pheno_file="/gpfs/data/ukb-share/extracted_phenotypes/${phenoNoDigits}/${pheno}.pheno"
 echo "Phenotype file: $pheno_file"
 
 # Get phenotype code
